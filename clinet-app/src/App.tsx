@@ -1,27 +1,26 @@
 import { useEffect, useState } from 'react'
-import { Member } from './lib/types/member';
-import { List, ListItem, Typography } from '@mui/material';
+import { Member } from './lib/types';
+import { List, ListItem, ListItemText, Typography } from '@mui/material';
 import axios from 'axios';
 
 function App() {
-  const [memebers, setMemebes] = useState<Member[]>([]);
-
+  const[members, setMembers] = useState<Member[]>([]);
   useEffect(() => {
-    axios<Member[]>("https://localhost:5001/api/Members").then(response =>
-       setMemebes(response.data))
-  }, []);
-
-  
+     axios.get<Member[]>("https://localhost:5001/api/members")
+     .then(ressponse => setMembers(ressponse.data))
+     //return() => {} //this is clean up code
+  },[]);
 
   return (
     <>
-     <Typography variant='h3'>ECN Members</Typography>
-        <List>
-          {memebers.map((memeber) =>(
-            <ListItem key={memeber.id}>{memeber.firstName}</ListItem>
-          ))}
-        </List>
-     </>
+     <Typography variant='h3'  style={{color:'#fd0101'}}>Hello Members</Typography >
+
+     <List>
+       {members.map((element) => (
+        <ListItem key={element.id}><ListItemText>{element.firstName}</ListItemText></ListItem>
+       ))}
+     </List>
+    </>
   )
 }
 

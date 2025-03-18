@@ -79,6 +79,9 @@ namespace Application.MediatR
             }
 
             //!!! to UpdateNavigation Entities
+
+            //! PLEAE NOTE why we say ==> where T : class   --  because we want to make sure that T is a reference type not value type
+        //!If we didn't specify where T : class, someone could mistakenly call the method with List<int> or List<bool>
             private void UpdateNavigationEntities<T, TDto>(
                                 ICollection<T> entities,    ICollection<TDto> dtos, 
                                 Action<T, TDto> updateAction
