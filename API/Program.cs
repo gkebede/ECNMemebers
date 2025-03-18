@@ -1,4 +1,10 @@
 
+using System.Text.Json.Serialization;
+using Application.Core;
+using Application.MediatR;
+using Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -6,53 +12,77 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+    });
+
+    
 
 builder.Services.AddDbContext<AppDbContext>(options => options
 .UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
- builder.Services.AddCors(options =>
+builder.Services.AddCors(options =>
+           {
+
+               options.AddPolicy("CorsPolicy", policy =>
+               {
+                   //policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("*");
+                   policy.AllowAnyMethod().AllowAnyHeader()
+                   .WithOrigins("http://localhost:3000", "https://localhost:3000");
+               });
+
+           });
+
+  builder.Services.AddIdentity<Member, IdentityRole>(opt =>
             {
+                opt.Password.RequiredLength = 7;
+                opt.Password.RequireNonAlphanumeric = true;
+                opt.User.RequireUniqueEmail = true;
 
-                options.AddPolicy("CorsPolicy", policy =>
-                {
-                    //policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("*");
-                    policy.AllowAnyMethod().AllowAnyHeader()
-                    .WithOrigins("http://localhost:3000", "https://localhost:3000");
-                });
+            }).AddEntityFrameworkStores<AppDbContext>()
+              .AddDefaultTokenProviders();
 
-            });
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+  builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(List.Handler).Assembly));
+  builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
- 
+
 //app.UseHttpsRedirection();
 
 //app.UseAuthorization();
 app.UseCors("CorsPolicy");
 app.MapControllers();
 
-using var scope = app.Services.CreateScope();  //the whole injected services are availabel here 
 
-var servises = scope.ServiceProvider;  //from whole injected services pick desire service
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
 
 try
-{   
-    var context = servises.GetRequiredService<AppDbContext>(); //! GIVE US THE DESIRE SERVICE 
-    //var userManager = servises.GetRequiredService<UserManager<Member>>();
-      await context.Database.MigrateAsync();//! this will create the database if it does not exist and apply any pending migrations
-      await DbInitalizer.SeedData(context);  //! and then dotnet watch run
+{
+    var context = services.GetRequiredService<AppDbContext>();//! GIVE US THE DESIRE SERVICE 
+    var userManager = services.GetRequiredService<UserManager<Member>>();
+
+    await context.Database.MigrateAsync();//! this will create the database if it does not exist and apply any pending migrations
+    await DbInitializer.SeedData(context, userManager);//! and then dotnet watch run
 }
 catch (Exception ex)
 {
-    
-    var logger = servises.GetRequiredService<ILogger<Program>>();//! GIVE US THE DESIRE SERVICE  again 
-    logger.LogError(ex, "An error occurd during migration!");
+    var logger = services.GetRequiredService<ILogger<Program>>();//! GIVE US THE DESIRE SERVICE  again 
+    logger.LogError(ex, "An error occurred during migration!");
 }
+
 
 
 app.Run();
 
 
- 
+
