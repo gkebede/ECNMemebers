@@ -1,6 +1,9 @@
 
 
 
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace Domain
 {
     public class Address
@@ -13,8 +16,10 @@ namespace Domain
         public string? ZipCode { get; set; }
 
         // Foreign key
+        [Required]
         public string MemberId { get; set; } = null!;
         // Navigation property
+            [JsonIgnore]
         public Member Member { get; set; } = null!;
 
     }

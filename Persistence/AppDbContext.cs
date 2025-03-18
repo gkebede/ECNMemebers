@@ -1,15 +1,17 @@
 using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext : IdentityDbContext<Member>
     {
          public AppDbContext(DbContextOptions options) : base(options)
     {
     }
 
     public DbSet<Member> Members { get; set; }
+    public DbSet<Payment> Payments { get; set; }
     public DbSet<MemberFile> MemberFiles { get; set; }
     public DbSet<Incident> Incidents { get; set; }      
     public DbSet<Address> Addresses { get; set; }

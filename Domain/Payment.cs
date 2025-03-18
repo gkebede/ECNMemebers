@@ -1,6 +1,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Domain
 {
@@ -12,25 +13,27 @@ namespace Domain
     public double PaymentAmount { get; set; }
     public DateTime PaymentDate { get; set; }
     [Required]
-    [Column(TypeName = "nvarchar(50)")]
+   // [Column(TypeName = "nvarchar(50)")]
     public PaymentType PaymentType { get; set; } // Enum instead of string
 
     [Required]
-    [Column(TypeName = "nvarchar(50)")] //  string instead of  Enum
+    //[Column(TypeName = "nvarchar(50)")] //  string instead of  Enum
     public PaymentRecurringType PaymentRecurringType { get; set; } // Enum instead of string
 
     // Foreign key
     public string MemberId { get; set; } = null!;
+
+    [JsonIgnore]
     public Member Member { get; set; } = null!;
 }
 
 
 public enum PaymentType
 {
-    Cash = 0,
-    CreditCard=1,
-    BankTransfer=2, 
-    Check=3
+    Cash,
+    CreditCard,
+    BankTransfer, 
+    Check
 }
 
 public enum PaymentRecurringType

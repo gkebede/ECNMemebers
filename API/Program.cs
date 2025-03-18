@@ -4,7 +4,6 @@ using Application.Core;
 using Application.MediatR;
 using Domain;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 

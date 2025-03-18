@@ -1,16 +1,23 @@
 
+using Microsoft.AspNetCore.Identity;
+
 namespace Domain
 {
-    public class Member
+    public class Member :  IdentityUser
     {
-        public string Id { get; set; } = Guid.NewGuid().ToString();
-        public DateTime RegisterDate { get; set; } = DateTime.Today;
+        //dotnet ef migrations add InitialCreate -p Persistence -s API
+        // how to debug the reload the vs code and re run the command dotnet watch run
+        //!'MemberDto.UserName' must be set in the object initializer or attribute constructor.
+        //! UserName = m.UserName,  or inside contructor UserName = m.UserName
+       // public  new string Id { get; set; } = Guid.NewGuid().ToString();
         public required string FirstName { get; set; }
         public string? MiddleName { get; set; }
         public required string LastName { get; set; }
-        public string? Email { get; set; }
-        public string? PhoneNumber { get; set; }
+        public string? DisplayName { get; set; }
+        public string? Bio { get; set; }
         public bool IsMember { get; set; }
+        public DateTime RegisterDate { get; set; } = DateTime.Today;
+        
 
         // Navigation properties
         public List<Address> Addresses { get; set; } = new();
