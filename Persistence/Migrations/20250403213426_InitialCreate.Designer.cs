@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250318041424_InitialCreate")]
+    [Migration("20250403213426_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -61,18 +61,18 @@ namespace Persistence.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("MemberFamilyFirstName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
+                    b.Property<string>("MemberFamilyLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MemberFamilyMiddleName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MemberId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("MiddleName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Relationship")
                         .HasColumnType("nvarchar(max)");
@@ -92,8 +92,9 @@ namespace Persistence.Migrations
                     b.Property<int>("EventNumber")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("IncidentDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("IncidentDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IncidentDescription")
                         .HasColumnType("nvarchar(max)");
@@ -141,7 +142,10 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsMember")
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
@@ -174,8 +178,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("RegisterDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("RegisterDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -222,8 +227,9 @@ namespace Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<DateTime>("UploadDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("UploadDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -244,8 +250,9 @@ namespace Persistence.Migrations
                     b.Property<double>("PaymentAmount")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("PaymentDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("PaymentDate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("PaymentRecurringType")
                         .HasColumnType("int");

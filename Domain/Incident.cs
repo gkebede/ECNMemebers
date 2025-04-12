@@ -15,7 +15,8 @@ namespace Domain
         public int EventNumber { get; set; }
         public IncidentType IncidentType { get; set; } // Enum instead of string
         public string? IncidentDescription { get; set; }
-        public DateTime IncidentDate { get; set; }
+       // public DateTime IncidentDate { get; set; }
+        public string IncidentDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
 
         // Foreign key
            [Required]

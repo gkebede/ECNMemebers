@@ -16,7 +16,10 @@ public class MemberFile
 
     public string FilePath { get; set; } = null!;  // Stores location on C drive or url
 
-    public DateTime UploadDate { get; set; } = DateTime.UtcNow;
+   // public DateTime UploadDate { get; set; } = DateTime.UtcNow;
+    public string UploadDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
+
+    
    [Required]
     public string MemberId { get; set; } = null!;
         [JsonIgnore]

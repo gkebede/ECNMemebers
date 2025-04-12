@@ -35,8 +35,9 @@ namespace Persistence.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IsMember = table.Column<bool>(type: "bit", nullable: false),
-                    RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsAdmin = table.Column<bool>(type: "bit", nullable: false),
+                    RegisterDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -191,9 +192,9 @@ namespace Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MemberFamilyFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MemberFamilyMiddleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    MemberFamilyLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Relationship = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
@@ -216,7 +217,7 @@ namespace Persistence.Migrations
                     EventNumber = table.Column<int>(type: "int", nullable: false),
                     IncidentType = table.Column<int>(type: "int", nullable: false),
                     IncidentDescription = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    IncidentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IncidentDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -239,7 +240,7 @@ namespace Persistence.Migrations
                     FileName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FileType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UploadDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -259,7 +260,7 @@ namespace Persistence.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     PaymentAmount = table.Column<double>(type: "float", nullable: false),
-                    PaymentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PaymentDate = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PaymentType = table.Column<int>(type: "int", nullable: false),
                     PaymentRecurringType = table.Column<int>(type: "int", nullable: false),
                     MemberId = table.Column<string>(type: "nvarchar(450)", nullable: false)

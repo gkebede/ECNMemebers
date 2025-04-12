@@ -1,23 +1,29 @@
 
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain
 {
-    public class Member :  IdentityUser
+    public class Member : IdentityUser
     {
         //dotnet ef migrations add InitialCreate -p Persistence -s API
-        // how to debug the reload the vs code and re run the command dotnet watch run
-        //!'MemberDto.UserName' must be set in the object initializer or attribute constructor.
-        //! UserName = m.UserName,  or inside contructor UserName = m.UserName
-       // public  new string Id { get; set; } = Guid.NewGuid().ToString();
+
+        //! public string Id { get; set; } = Guid.NewGuid().ToString(); -> set already in IdentityUser no need in creating a "Member" and also ***Make sure Id is not required in the MemberDTO.
+        //! ***Make sure Id is not required in the other Dtos (I.E. Payments...) since it is set in each Domain classes  (public string Id { get; set; } = Guid.NewGuid().ToString();) and Ignore() the "Id" in the mapping profile for creating the objec
+
+        [Display(Name = "First Name")]
         public required string FirstName { get; set; }
+        [Display(Name = "Middle Name")]
         public string? MiddleName { get; set; }
+        [Display(Name = "Last Name")]
         public required string LastName { get; set; }
+        [Display(Name = "Display Name")]
         public string? DisplayName { get; set; }
         public string? Bio { get; set; }
-        public bool IsMember { get; set; }
-        public DateTime RegisterDate { get; set; } = DateTime.Today;
-        
+        public bool IsActive { get; set; }
+        public bool IsAdmin { get; set; }
+        public string RegisterDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
+
 
         // Navigation properties
         public List<Address> Addresses { get; set; } = new();

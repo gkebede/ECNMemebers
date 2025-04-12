@@ -13,16 +13,16 @@ namespace API.Controllers
         public async Task<ActionResult<List<MemberDto>>> GetMembers()
         {
             // using axios == output => response.data.value
-            var result = await Mediator.Send(new List.Query());
+            var result = await Mediator.Send(new GetMemberList.Query());
             return HandleResult(result);
         }
 
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetMember(string id)
+        public async Task<IActionResult> GetMember(Guid id)
         {
-            var result = await Mediator.Send(new Details.Query { Id = id });
+            var result = await Mediator.Send(new MemberDetails.Query { Id = id });
             return Ok(HandleResult(result));
         }
 
@@ -30,7 +30,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<Member>>Create(MemberDto member)
         {
-            var result = await Mediator.Send(new Create.Command { MemberDto = member });
+            var result = await Mediator.Send(new CreateMember.Command { MemberDto = member });
             return HandleResult(result);
         }
 

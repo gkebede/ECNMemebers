@@ -7,7 +7,9 @@ export type Member = {
     lastName: string
     email: string
     phoneNumber: string
-    isMember: boolean
+    isActive: boolean
+    isAdmin: boolean
+   
     addresses: Address[]
     familyMembers: FamilyMember[]
     memberFiles: MemberFile[]

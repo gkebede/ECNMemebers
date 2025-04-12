@@ -8,7 +8,7 @@ using AutoMapper.QueryableExtensions;
 
 namespace Application.MediatR
 {
-    public class List
+    public class GetMemberList
     {
         public class Query : IRequest<Result<List<MemberDto>>>
         {
@@ -25,10 +25,12 @@ namespace Application.MediatR
         }
         public async Task<Result<List<MemberDto>>> Handle(Query request, CancellationToken cancellationToken)
         {
+            var id = string.Empty;
           var members = await _context.Members
-               //ProjectTo  === using AutoMapper.QueryableExtensions;
+               //ProjectTo  === using AutoMapper.QueryableExtensions; //! this work as the same as .ProjectTo<>
                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
                .ToListAsync(cancellationToken);
+              
                return Result<List<MemberDto>>.Success(members);
         }
     }

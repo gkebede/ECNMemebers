@@ -17,7 +17,7 @@ namespace Persistence
                 PhoneNumber = "123-456-7890",
                 FirstName = "John",
                 LastName = "Doe",
-                IsMember = true
+                IsActive = true
             };
 
             Member member1 = new Member
@@ -27,7 +27,7 @@ namespace Persistence
                 PhoneNumber = "470-980-2045",
                 FirstName = "Tom",
                 LastName = "Smith",
-                IsMember = true
+                IsActive = true
             };
 
             await userManager.CreateAsync(member, "Password123!");  // Use Identity to create users
@@ -40,7 +40,7 @@ namespace Persistence
                 {
                     new Payment
                     {
-                        PaymentDate = new DateTime(2021, 1, 1),
+                        PaymentDate = new DateTime(2021, 1, 1).ToString("yyyy-MM-dd"),
                         PaymentAmount = 50.00,
                         PaymentType = PaymentType.CreditCard,
                         PaymentRecurringType = PaymentRecurringType.Annual,
@@ -48,7 +48,7 @@ namespace Persistence
                     },
                     new Payment
                     {
-                        PaymentDate = new DateTime(2021, 1, 1),
+                        PaymentDate = new DateTime(2021, 1, 1).ToString("yyyy-MM-dd"),
                         PaymentAmount = 20.00,
                         PaymentType = PaymentType.CreditCard,
                         PaymentRecurringType = PaymentRecurringType.Monthly,
@@ -75,8 +75,18 @@ namespace Persistence
             {
                 var familyMembers = new List<FamilyMember>
                 {
-                    new FamilyMember { FirstName = "Jane", LastName = "Doe",  MemberId = member.Id },
-                    new FamilyMember { FirstName = "Sara", LastName = "Doe", MemberId = member.Id }
+                    new FamilyMember {
+                         MemberFamilyFirstName = "Jane",
+                         MemberFamilyLastName = "Doe", 
+                         MemberFamilyMiddleName="CBE",
+                         Relationship ="Mother",
+                         MemberId = member.Id },
+                    new FamilyMember {
+                         MemberFamilyFirstName = "Sara",
+                         MemberFamilyLastName = "Doe",
+                         MemberFamilyMiddleName="Tekle",
+                          Relationship ="Sister",
+                         MemberId = member.Id }
                 };
 
                 await context.FamilyMembers.AddRangeAsync(familyMembers);

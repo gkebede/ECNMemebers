@@ -21,13 +21,13 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.WriteIndented = true;
     });
 
-    
 
-builder.Services.AddDbContext<AppDbContext>(options => options
-.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), 
+    sqlOptions => sqlOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+
 builder.Services.AddCors(options =>
            {
-
                options.AddPolicy("CorsPolicy", policy =>
                {
                    //policy.AllowAnyMethod().AllowAnyHeader().WithOrigins("*");
@@ -46,7 +46,8 @@ builder.Services.AddCors(options =>
             }).AddEntityFrameworkStores<AppDbContext>()
               .AddDefaultTokenProviders();
 
-  builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(List.Handler).Assembly));
+  builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetMemberList>());
+ // builder.Services.AddMediatR(config => config.RegisterServicesFromAssemblies(typeof(GetMemberList.Handler).Assembly));
   builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 
 

@@ -20,7 +20,7 @@ protected override void OnModelCreating(ModelBuilder builder)
 {
     base.OnModelCreating(builder);
 
-    Console.WriteLine("🔹 OnModelCreating executed!"); // Debugging log
+    Console.WriteLine("OnModelCreating executed!"); // Debugging log
 
     // Define Relationships
     builder.Entity<Member>()
