@@ -12,7 +12,7 @@ namespace Domain
     public string Id { get; set; } = Guid.NewGuid().ToString();
     public double PaymentAmount { get; set; }
     //public DateTime PaymentDate { get; set; }
-        public string PaymentDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
+    public string PaymentDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
 
     [Required]
    // [Column(TypeName = "nvarchar(50)")]
@@ -35,15 +35,18 @@ public enum PaymentType
     Cash,
     CreditCard,
     BankTransfer, 
-    Check
+    Check,
+    reciptAttached // Receipt for the payment
 }
 
-public enum PaymentRecurringType
-{
-    Annual ,    // Payments made once a year
-    Monthly,   // Payments made every month
-    Quarterly, // Payments made every three months
-    Incident   // Emergency or one-time payments due to unforeseen situations
+    public enum PaymentRecurringType
+    {
+        Annual,    // Payments made once a year
+        Monthly,   // Payments made every month
+        Quarterly, // Payments made every three months
+        Incident,   // Emergency or one-time payments due to unforeseen situations
+        Membership, // Membership payments
+        Mislaneous // Other types of payments
 }
  
 }

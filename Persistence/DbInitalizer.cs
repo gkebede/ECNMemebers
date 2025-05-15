@@ -50,7 +50,7 @@ namespace Persistence
                     {
                         PaymentDate = new DateTime(2021, 1, 1).ToString("yyyy-MM-dd"),
                         PaymentAmount = 20.00,
-                        PaymentType = PaymentType.CreditCard,
+                        PaymentType = PaymentType.reciptAttached,
                         PaymentRecurringType = PaymentRecurringType.Monthly,
                         MemberId = member.Id,
 

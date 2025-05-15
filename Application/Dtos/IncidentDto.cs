@@ -8,5 +8,6 @@ namespace Application.Dtos
     //public DateTime IncidentDate { get; set; }
     public string PaymentDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
     public int EventNumber { get; set; }
+    public string IncidentDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
     }
 }

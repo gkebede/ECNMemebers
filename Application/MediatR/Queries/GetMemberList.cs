@@ -10,6 +10,7 @@ namespace Application.MediatR
 {
     public class GetMemberList
     {
+        //public class Query : IRequest<Result<List<MemberDto>>>
         public class Query : IRequest<Result<List<MemberDto>>>
         {
             // Add the missing type definition

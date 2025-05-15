@@ -12,6 +12,7 @@ namespace Application.MediatR
     {
 
 
+        // public class Query : IRequest<Result<MemberDto>>
         public class Query : IRequest<Result<MemberDto>>
         {
             public required Guid Id { get; set; }

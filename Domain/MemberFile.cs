@@ -1,30 +1,29 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using Amazon.S3;
-using Amazon.S3.Transfer;
+ 
 
 namespace Domain
 {
-public class MemberFile
+    public class MemberFile
 {
-    public string Id { get; set; } = Guid.NewGuid().ToString();
-    public string? FileDescription { get; set; }   // e.g., "Membership Form"
+    public Guid Id { get; set; }
 
-    public string? FileName { get; set; }  // e.g., "document.pdf"
-    
-    public string? FileType { get; set; }  // e.g., "pdf", "jpg"
+    public string FileName { get; set; } = null!;
+    public string FileDescription { get; set; } = null!;
+    public string FilePath { get; set; } = null!;
 
-    public string FilePath { get; set; } = null!;  // Stores location on C drive or url
+    public string? ContentType { get; set; }
+    public byte[]? Data { get; set; }
 
-   // public DateTime UploadDate { get; set; } = DateTime.UtcNow;
-    public string UploadDate { get; set; } = DateTime.Today.ToString("MM/dd/yyyy");
+    // 👇 Foreign Key
+    public Guid MemberId { get; set; }
 
-    
-   [Required]
-    public string MemberId { get; set; } = null!;
-        [JsonIgnore]
+    // 👇 Navigation Property (optional but useful)
     public Member Member { get; set; } = null!;
 }
 
 }
+
+
+
+  
+  
 

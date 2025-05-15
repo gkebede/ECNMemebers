@@ -5,6 +5,7 @@ using MediatR;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Application.Dtos;
+using System.Security.Claims;
 
 namespace Application.MediatR
 {
@@ -29,37 +30,65 @@ namespace Application.MediatR
             }
 
 
-            
-
-            public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
-            {     //! member === newMember -BUT- b/c of inheritance we have to create a Member instade of IdentityUser
-            //! and userMang/singinmanager must be Generic type of Member NOT IdentityUser HERE
-                 
-                //! The password should be hashed and salted before storing it in the database.
-                //Make sure Id is not required in the DTO. since it is generated in serverside 
-                if (request.MemberDto == null)
-                {
-                    return Result<string>.Failure("Member cannot be null.");
-                }
 
 
-                var member = _mapper.Map<Member>(request.MemberDto);
-                
-                //! This is a temporary solution to create a new user with a password.
-                var result = await _userManager.CreateAsync(member, "Default@123"); // Replace with secure password handling
+public async Task<Result<string>> Handle(Command request, CancellationToken cancellationToken)
+{     //! member === newMember -BUT- b/c of inheritance we have to create a Member instade of IdentityUser
+      //! and userMang/singinmanager must be Generic type of Member NOT IdentityUser HERE
 
-                var newMember = new IdentityUser { UserName = request.MemberDto.Email, Email = request.MemberDto.Email };
-               
-                if (!result.Succeeded)
-                {
-                    var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
-                    return Result<string>.Failure(errorMessage);
-                }
+    //! The password should be hashed and salted before storing it in the database.
+    if (request.MemberDto == null)
+        return Result<string>.Failure("Member cannot be null.");
 
-                await _signInManager.SignInAsync(member, isPersistent: false);
+    if (string.IsNullOrWhiteSpace(request.MemberDto.Email))
+        return Result<string>.Failure("Email is required.");
 
-                return Result<string>.Success(member.Id);
-            }
+    if (await _userManager.FindByEmailAsync(request.MemberDto.Email) != null)
+        return Result<string>.Failure("Email already exists.");
+
+    if (string.IsNullOrWhiteSpace(request.MemberDto.PhoneNumber))
+        return Result<string>.Failure("Phone number cannot be null or empty.");
+
+    if (_userManager.Users.Any(u => u.PhoneNumber == request.MemberDto.PhoneNumber))
+        return Result<string>.Failure("Phone number already exists.");
+
+    var member = _mapper.Map<Member>(request.MemberDto);
+
+    // Generate unique username
+    string baseUsername = $"{request.MemberDto.FirstName}_{request.MemberDto.LastName}";
+    string uniqueUsername = baseUsername;
+    int suffix = 1;
+
+    while (await _userManager.FindByNameAsync(uniqueUsername) != null)
+    {
+        uniqueUsername = $"{baseUsername}{suffix++}";
+    }
+
+    member.UserName = uniqueUsername;
+
+    var result = await _userManager.CreateAsync(member, "Default@123");
+    if (!result.Succeeded)
+    {
+        var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+        return Result<string>.Failure(errorMessage);
+    }
+
+    // Optional: assign roles and claims
+    var role = request.MemberDto.IsAdmin ? "Admin" : "Member";
+    await _userManager.AddToRoleAsync(member, role);
+    await _userManager.AddClaimsAsync(member, new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, member.UserName ?? ""),
+        new Claim(ClaimTypes.Email, member.Email ?? ""),
+        new Claim(ClaimTypes.MobilePhone, member.PhoneNumber ?? ""),
+        new Claim(ClaimTypes.Role, role)
+    });
+
+    await _signInManager.SignInAsync(member, isPersistent: false);
+
+    return Result<string>.Success(member.Id);
+}
+
         }
     }
 
