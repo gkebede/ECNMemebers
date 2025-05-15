@@ -2,6 +2,7 @@ using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Application.Dtos;
 using Application.MediatR;
+using Application.MediatR.Commands;
 
 namespace API.Controllers
 {
@@ -26,11 +27,20 @@ namespace API.Controllers
             return Ok(HandleResult(result));
         }
 
+        //    [HttpGet("search/{value}")]
+        // public async Task<IActionResult> GetMemberByValue(string value)
+        // {
+        //     var result = await Mediator.Send(new MemberDetails.Query { SearchString = searchString });
+        //     return Ok(HandleResult(result));
+        // }
+
 
         [HttpPost]
-        public async Task<ActionResult<Member>>Create(MemberDto member)
+        public async Task<ActionResult<Member>> Create(MemberDto member)
         {
             var result = await Mediator.Send(new CreateMember.Command { MemberDto = member });
+
+            //Console.WriteLine($"UserName: {member.UserName}");
             return HandleResult(result);
         }
 
@@ -41,15 +51,20 @@ namespace API.Controllers
             return Ok(HandleResult(result));
         }
 
-          [HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var result = await Mediator.Send(new Delete.Command{ Id = id });
+            var result = await Mediator.Send(new Delete.Command { Id = id });
             return Ok(HandleResult(result));
         }
-    }
 
- 
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, Guid memberId)
+        {
+            var result = await Mediator.Send(new UploadFile.Command { File = file, MemberId = memberId });
+            return Ok(result);
+        }
+    }
 
 }
 
