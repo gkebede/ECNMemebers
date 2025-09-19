@@ -86,7 +86,7 @@ const MemberList = function ({ members }: Props) {
 
       <Container maxWidth='xl' sx={{ m: 'auto', justifyContent: 'space-between' }}>
 
-        {!members || members.length === 0 ? (
+        {!members.length ? (
 
           <Box sx={{ mt: 22, borderRadius: '2rem', fontSize: '5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '15vh', p: 2 }}>
             <Box>
@@ -200,6 +200,7 @@ const MemberList = function ({ members }: Props) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
+                
                     {paginatedMembers.map((member, index) => (
                       
                       <React.Fragment key={member.id}>
