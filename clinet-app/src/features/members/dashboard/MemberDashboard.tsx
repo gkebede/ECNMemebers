@@ -23,7 +23,7 @@ const MemberDashboard = observer(() => {
       <Grid2 size={12}>
         <List>
           <ListItem>
-            <MemberList members={members} />
+           <MemberList members={members} />
           </ListItem>
         </List>
       </Grid2>

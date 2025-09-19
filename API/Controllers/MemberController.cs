@@ -2,7 +2,7 @@ using Domain;
 using Microsoft.AspNetCore.Mvc;
 using Application.Dtos;
 using Application.MediatR;
-using Application.MediatR.Commands;
+using Application.MediatR.Queries;
 
 namespace API.Controllers
 {
@@ -58,13 +58,77 @@ namespace API.Controllers
             return Ok(HandleResult(result));
         }
 
-        [HttpPost("upload")]
-        public async Task<IActionResult> UploadFile([FromForm] IFormFile file, Guid memberId)
+        // uploads files
+        [HttpPost("uploads/{memberId}")]
+        public async Task<IActionResult> UploadFiles(
+         [FromRoute] Guid memberId,
+         [FromForm] List<IFormFile> files,
+         [FromForm] string? fileDescription) // <-- Capture this explicitly
         {
-            var result = await Mediator.Send(new UploadFile.Command { File = file, MemberId = memberId });
+
+            const long maxFileSize = 10 * 1024 * 1024; // 10 MB
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".pdf" };
+
+            if (files == null || !files.Any())
+                return BadRequest("No files uploaded.");
+
+
+            foreach (var file in files)
+            {
+                var extension = Path.GetExtension(file.FileName).ToLower();
+                if (!allowedExtensions.Contains(extension))
+                    return BadRequest($"Unsupported file type: {extension}");
+
+                if (file.Length > maxFileSize)
+                    return BadRequest($"File '{file.FileName}' exceeds size limit (10MB).");
+
+            }
+
+
+            var result = await Mediator.Send(new UploadFile.Command
+            {
+                MemberId = memberId,
+                Files = files,
+                FileDescription = fileDescription // <-- Pass it here
+            });
+
+            return result.IsSuccess
+    ? Ok(new
+    {
+        message = "Files uploaded successfully.",
+        files = result.Value // assumed to contain file metadata
+    })
+    : BadRequest(result.Error);
+        }
+
+        // Get ingle file
+        [HttpGet("file/{memberId}")]
+        public async Task<IActionResult> GetSingleFile(Guid memberId)
+        {
+            var result = await Mediator.Send(new GetMembeFiles.Query { Id = memberId });
+
+            if (result == null || result.Value == null || !result.Value.Any())
+                return NotFound();
+
+            return Ok(result.Value.First()); // returns single File
+        }
+
+        // Get list of files
+        [HttpGet("files/{memberId}")]
+        public async Task<IActionResult> GetFiles(Guid memberId)
+        {
+
+            var result = await Mediator.Send(new GetMembeFiles.Query
+            {
+                Id = memberId
+            });
+
+
             return Ok(result);
         }
-    }
 
+
+    }
 }
+
 

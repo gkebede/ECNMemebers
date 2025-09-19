@@ -1,24 +1,21 @@
  
 
+
 namespace Domain
 {
     public class MemberFile
 {
     public Guid Id { get; set; }
+    public string? FileName { get; set; } = null!;//IFormFiel
+    public string? FileDescription { get; set; } //IFormFiel
+    public string? FilePath { get; set; }
+    public string? ContentType { get; set; }  //IFormFiel
+    
+    public string MemberId { get; set; } = null!;
 
-    public string FileName { get; set; } = null!;
-    public string FileDescription { get; set; } = null!;
-    public string FilePath { get; set; } = null!;
-
-    public string? ContentType { get; set; }
-    public byte[]? Data { get; set; }
-
-    // 👇 Foreign Key
-    public Guid MemberId { get; set; }
-
-    // 👇 Navigation Property (optional but useful)
     public Member Member { get; set; } = null!;
 }
+
 
 }
 

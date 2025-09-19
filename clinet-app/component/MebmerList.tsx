@@ -8,17 +8,19 @@ import {
   InputAdornment,
 
   TablePagination,
-  Chip,
+  Chip
 } from '@mui/material';
 import PageviewIcon from '@mui/icons-material/Pageview';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { format } from 'date-fns';
 import { Member } from '../src/lib/types';
 import { observer } from "mobx-react-lite";
 import { SpaRounded } from '@mui/icons-material';
+//import { ExpandMore } from '../src/features/members/dashboard/Paymentreceipt';
+//import ReceiptDetailComponent from '../src/features/members/dashboard/ReceiptDetailComponent';
 
 type Props = {
   members: Member[]
@@ -84,15 +86,15 @@ const MemberList = function ({ members }: Props) {
 
       <Container maxWidth='xl' sx={{ m: 'auto', justifyContent: 'space-between' }}>
 
-        {!members.length ? (
+        {!members || members.length === 0 ? (
+
           <Box sx={{ mt: 22, borderRadius: '2rem', fontSize: '5rem', display: 'flex', justifyContent: 'center', alignItems: 'center', height: '15vh', p: 2 }}>
-
-
-            <CircularProgress style={{ color: 'green', width: 100, height: 100 }} />
-            <Box sx={{ fontSize: '2rem', ml: 2, fontWeight: 700 }}>
-              Loading Members...
+            <Box>
+              <CircularProgress style={{ color: 'green', width: 100, height: 100 }} />
             </Box>
-
+            <Box sx={{ fontSize: '2rem', ml: 2, fontWeight: 700, justifyContent: 'end', m: 6 }}>
+              Loading...
+            </Box>
           </Box>
         ) : (
           <>
@@ -134,11 +136,11 @@ const MemberList = function ({ members }: Props) {
               <Box sx={{ textAlign: 'center', fontWeight: 700, mb: 2, fontSize: '1.5rem', borderRadius: '1rem', p: 2, }}>
                 <Chip
                   icon={<SpaRounded sx={{ fontSize: '2rem', color: '#006663' }} />}
-                  
+
                   label={
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: .2 }}>
                       <Box
-                      
+
                         sx={{
                           backgroundColor: '#fd0101',
                           fontSize: '1.5rem',
@@ -152,7 +154,7 @@ const MemberList = function ({ members }: Props) {
                         Sorry
                       </Box>
                       <Box
-                        sx={{ 
+                        sx={{
                           backgroundColor: '#f0f0f0',
                           color: '#000',
                           padding: '1rem .5rem',
@@ -161,9 +163,9 @@ const MemberList = function ({ members }: Props) {
                           fontSize: '1.5rem',
                           textAlign: 'center',
                         }}
-                        
+
                       >
-                        
+
                         We do not have a member called: {selectedMember.toUpperCase()}
                       </Box>
                     </Box>
@@ -182,7 +184,7 @@ const MemberList = function ({ members }: Props) {
 
               </Box>
             ) :
-            
+
               <TableContainer component={Paper} sx={{ maxWidth: '100%', margin: 'auto', borderRadius: '1rem' }}>
                 <Table aria-label="collapsible table">
                   <TableHead sx={{ backgroundColor: 'lightblue' }}>
@@ -199,7 +201,9 @@ const MemberList = function ({ members }: Props) {
                   </TableHead>
                   <TableBody>
                     {paginatedMembers.map((member, index) => (
+                      
                       <React.Fragment key={member.id}>
+                       
                         <TableRow sx={{ backgroundColor: index % 2 === 0 ? '#f5f5f5' : '#ffffff' }}>
                           <TableCell>
                             <IconButton size="small" onClick={() => toggleOpen(member.id ?? '')}>
@@ -248,41 +252,48 @@ const MemberList = function ({ members }: Props) {
 
                                     </TableRow>
                                   </TableHead>
-                                 <TableBody>
-  <TableRow>
-    <TableCell>
-      {(member.incidents?.length ?? 0) > 0 ? member.incidents?.map((incident, index) => (
-          <div key={index}>{incident.eventNumber}</div>
-        ))
-        : "N/A"}
-    </TableCell>
-    <TableCell>
-      {(member.payments?.length ?? 0) > 0
-        ? member.payments?.map((payment, index) => (
-          <div key={index}>${payment.paymentAmount}</div>
-        ))
-        : "N/A"}
-    </TableCell>
-    <TableCell>
-      {(member.payments?.length ?? 0) > 0
-        ? member.payments?.map((payment, index) => (
-          <div key={index}>{format(new Date(payment.paymentDate), 'dd MMM yyyy')}</div>
-        ))
-        : "N/A"}
-    </TableCell>
-    <TableCell>
-      {(member.memberFiles?.length ?? 0) > 0
-        ? member.memberFiles?.map((file, index) => (
-          <div key={index}>
-            <a href={file.filePath} target="_blank" rel="noopener noreferrer">
-              {file.filePath}
-            </a>
-          </div>
-        ))
-        : "N/A"}
-    </TableCell>
-  </TableRow>
-</TableBody>
+                                  <TableBody>
+                                    <TableRow>
+                                      <TableCell>
+                                        {(member.incidents?.length ?? 0) > 0 ? member.incidents?.map((incident, index) => (
+                                          <div key={index}>{incident.eventNumber}</div>
+                                        ))
+                                          : "N/A"}
+                                      </TableCell>
+                                      <TableCell>
+                                        {(member.payments?.length ?? 0) > 0
+                                          ? member.payments?.map((payment, index) => (
+                                            <div key={index}>${payment.paymentAmount}</div>
+                                          ))
+                                          : "N/A"}
+                                      </TableCell>
+                                      <TableCell>
+                                        {(member.payments?.length ?? 0) > 0
+                                          ? member.payments?.map((payment, index) => (
+                                            <div key={index}>{format(new Date(payment.paymentDate), 'dd MMM yyyy')}</div>
+                                          ))
+                                          : "N/A"}
+                                      </TableCell>
+                                      <TableCell>
+                                        {(member.memberFiles?.length ?? 0) > 0
+                                          ? member.memberFiles?.map((file, index) => {
+                                              console.log('File ID:', file.id);
+                                              return (
+                                                <div key={index}>
+                                                  <RouterLink
+                                                    to={`recipts/${file.id}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    style={{ textDecoration: 'none' }}
+                                                  >
+                                                  </RouterLink>
+                                                </div>
+                                              );
+                                            })
+                                          : "N/A"}
+                                      </TableCell>
+                                    </TableRow>
+                                  </TableBody>
 
                                 </Table>
 
@@ -316,10 +327,10 @@ const MemberList = function ({ members }: Props) {
 
               </TableContainer>
             }
-            
+
             {/* <SideDrawer />  */}
           </>
-        )}
+         )}
       </Container>
 
     </>

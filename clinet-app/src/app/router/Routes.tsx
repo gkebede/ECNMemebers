@@ -7,6 +7,7 @@ import Home from "../../../component/Home";
 import DetailDisplay from "../../features/members/dashboard/DetailDisplay";
 //import ObservedMemberForm from "../../features/members/form/MemberForm";
 import { MemberFormWrapper } from "../../features/members/form/MemberFormWrapper";
+// import PdfUploader from "../../features/invoices/PdfUploader";
  
 
 
@@ -19,6 +20,7 @@ const routes: RouteObject[] = [
             { path: 'memberList', element: <MemberDashboard /> },
             { path: 'acconut', element: <About /> },
             { path: 'contact', element: <Contact /> },
+         //     { path: 'recipts', element: <PdfUploader  /> },
             { path: 'card/:id', element: <DetailDisplay /> },
             { path: 'edit/:id', element: <MemberFormWrapper /> },
             { path: 'create', element: <MemberFormWrapper /> },

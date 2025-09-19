@@ -2,7 +2,7 @@ import { Box, TextField, Button, IconButton, Typography, Paper } from '@mui/mate
 import DeleteIcon from '@mui/icons-material/Delete';
 import { v4 as uuidv4 } from 'uuid';
 import { Incident } from '../../../lib/types';
-import {formatToInputDate} from '../../../utils/dateUtils';
+//import {formatToInputDate} from '../../../utils/dateUtils';
  
 
 type Props = {
@@ -11,7 +11,9 @@ type Props = {
 };
 
 export default function IncidentFormSection({ incidents, setIncidents }: Props) {
-  const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+
+
+  const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     const updated: Incident[] = [...incidents];
     updated[index] = { ...updated[index], [name]: value };
@@ -32,6 +34,7 @@ export default function IncidentFormSection({ incidents, setIncidents }: Props) 
     updated.splice(index, 1);
     setIncidents(updated);
   };
+
 
 
 
@@ -60,8 +63,7 @@ export default function IncidentFormSection({ incidents, setIncidents }: Props) 
               onChange={(e) => handleChange(index, e)}
             />
 
-        
-
+ 
             <TextField
               label="Event Number"
               name="eventNumber"

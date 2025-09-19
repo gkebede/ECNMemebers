@@ -6,7 +6,10 @@ namespace Application.Dtos
         public string? FileName { get; set; }
         public string FilePath { get; set; } = null!;
         public string? FileDescription { get; set; }
-          public string? ContentType { get; set; }
-    public byte[]? Data { get; set; }
+        public string? ContentType { get; set; }
+        public byte[]? Data { get; set; }
     }
 }
+
+ 
+

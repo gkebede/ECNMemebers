@@ -64,6 +64,7 @@ namespace Persistence
             {
                 var addresses = new List<Address>
                 {
+                    
                     new Address { Street = "123 Main St", City = "New York", State = "NY", ZipCode = "10001",  MemberId = member.Id },
                     new Address { Street = "456 Elm St", City = "Los Angeles", State = "CA", ZipCode = "90001",  MemberId = member.Id }
                 };
@@ -96,8 +97,11 @@ namespace Persistence
             {
                 var memberFiles = new List<MemberFile>
                 {
-                    new MemberFile { FileName = "Profile.jpg", FilePath = "C:/Users/ghail/OneDrive/Documents/payment_instructions.pdf", MemberId = member.Id },
-                    new MemberFile { FileName = "Profile.jpg", FilePath = "C:/Users/ghail/OneDrive/Pictures/TGojo.png",  MemberId = member.Id }
+
+                new MemberFile { FileName = "Profile.jpg", FilePath = "C:/Users/ghail/OneDrive/Pictures/TGojo.png",  MemberId = member.Id },
+                new MemberFile { FileName = "Profile.jpg", FilePath = "C:/Users/ghail/OneDrive/Documents/payment_instructions.pdf", MemberId = member.Id },
+                new MemberFile { FileName = "Profile.jpg", FilePath = "C:/Users/ghail/OneDrive/Pictures/TGojo.png",  MemberId = member.Id }
+                    
                 };
 
                 await context.MemberFiles.AddRangeAsync(memberFiles);

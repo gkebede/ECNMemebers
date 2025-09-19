@@ -20,7 +20,7 @@ import LoginPage from "./LoginForm";
   
   export default function NavBar() {
        const [show, setSwhow] = useState(false);
-       const [editMode, setEditMode] = useState(false);
+     //  const [editMode, setEditMode] = useState(false);
       // const [user, setUser] = useState<{ name: string; password: string } | null>(null);
       const SignIn = () => {
         setSwhow(!show);
@@ -106,7 +106,7 @@ import LoginPage from "./LoginForm";
                 </Box>
 
                  <Button component={RouterLink} to="/create" size="large" variant="contained" color="warning">Create Member</Button>  
-             
+           
               </Toolbar>
             </Container>
           </AppBar>

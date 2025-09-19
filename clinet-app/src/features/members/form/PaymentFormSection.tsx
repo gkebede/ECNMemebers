@@ -1,27 +1,32 @@
-import { Box, TextField, Button, IconButton, Typography, Paper, MenuItem } from '@mui/material';
+import {
+  Box,
+  TextField,
+  Button,
+  IconButton,
+  Typography,
+  Paper,
+  MenuItem,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { v4 as uuidv4 } from 'uuid';
-import { Payment, paymentRecurringType} from '../../../lib/types';
+import { Payment } from '../../../lib/types';
 
- 
- 
- const paymentMethods: string[] = [
-  'Cash',
-  'CreditCard',
-  'Check',
-  'Recipt-Attached',
-  'BankTransfer',
+const paymentMethods: string[] = [
+  'cash',
+  'creditCard',
+  'check',
+  'reciptAttached',
+  'bankTransfer',
 ];
 
- const paymentRecurringType: string[] = [
-   'Annual',
-   'Monthly',
-   'Quarterly',
-   'Incident',
-   'Membership',
-   'Mislaneous'
- 
- ];
+const paymentRecurringType: string[] = [
+  'annual',
+  'monthly',
+  'quarterly',
+  'incident',
+  'membership',
+  'mislaneous',
+];
 
 type Props = {
   payments: Payment[];
@@ -29,28 +34,27 @@ type Props = {
 };
 
 export default function PaymentFormSection({ payments, setPayments }: Props) {
+  const handleChange = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const updated = [...payments];
+    const payment = { ...updated[index] };
 
- 
+    if (name === 'paymentAmount') {
+      payment.paymentAmount = parseFloat(value) || 0;
+    } else if (name === 'paymentType') {
+      payment.paymentType = value;
+    } else if (name === 'paymentRecurringType') {
+      payment.paymentRecurringType = value;
+    } else if (name === 'paymentDate') {
+      payment.paymentDate = value;
+    }
 
-  const handleChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-  const { name, value } = e.target;
-  const updated = [...payments];
-  const payment = { ...updated[index] };
-
-  if (name === 'paymentAmount') {
-    payment.paymentAmount = parseFloat(value) || 0;
-  } else if (name === 'paymentType') {
-    payment.paymentType = value;
-  } else if (name === 'paymentRecurringType') {
-    payment.paymentRecurringType = value;
-  } else if (name === 'paymentDate') {
-    payment.paymentDate = value;
-  }
-
-  updated[index] = payment;
-  setPayments(updated);
-};
-
+    updated[index] = payment;
+    setPayments(updated);
+  };
 
   const handleAdd = () => {
     setPayments([
@@ -60,8 +64,8 @@ export default function PaymentFormSection({ payments, setPayments }: Props) {
         paymentAmount: 0,
         paymentDate: '',
         paymentType: '',
-        paymentRecurringType: ''
-      }
+        paymentRecurringType: '',
+      },
     ]);
   };
 
@@ -84,60 +88,55 @@ export default function PaymentFormSection({ payments, setPayments }: Props) {
             alignItems="center"
             mt={2}
           >
-
-          <TextField
+            <TextField
               label=""
               type="date"
               name="paymentDate"
-               //value= { payment.paymentDate ? formatToInputDate(payment.paymentDate) : ''}
-               value={ payment.paymentDate }
+              value={payment.paymentDate}
               onChange={(e) => handleChange(index, e)}
             />
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-  <span>$</span>
-  <TextField
-    type="number"
-    inputProps={{ step: "0.01", min: "0" }}
-    value={payment.paymentAmount}
-    name="paymentAmount"
-    onChange={(e) => handleChange(index, e)}
-  />
-</div>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <span>$</span>
+              <TextField
+                type="number"
+                inputProps={{ step: '0.01', min: '0' }}
+                value={payment.paymentAmount}
+                name="paymentAmount"
+                onChange={(e) => handleChange(index, e)}
+              />
+            </div>
             <TextField
               select
               label="Payment Type"
-              value={payment.paymentType}
+              value={(payment.paymentType || '').toLowerCase()}
               name="paymentType"
               onChange={(e) => handleChange(index, e)}
               fullWidth
               variant="outlined"
             >
-              {paymentMethods.map((option, index) => (
-                <MenuItem
-                  key={index} value={option.toString()}>
+              {paymentMethods.map((option) => (
+                <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
               ))}
             </TextField>
- 
+
             <TextField
               select
               label="Recurring Type"
               name="paymentRecurringType"
               onChange={(e) => handleChange(index, e)}
-                  value={payment.paymentRecurringType}
+              value={(payment.paymentRecurringType || '').toLowerCase()}
               fullWidth
               variant="outlined"
             >
-              { paymentRecurringType.map((option, index) => (
-                <MenuItem
-                  key={index} value={option.toString()}>
+              {paymentRecurringType.map((option) => (
+                <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>
-
               ))}
             </TextField>
- 
+
             <Box />
             <IconButton onClick={() => handleRemove(index)}>
               <DeleteIcon />

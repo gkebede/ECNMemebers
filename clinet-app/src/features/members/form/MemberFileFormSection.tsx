@@ -1,61 +1,74 @@
+import React, { useRef } from 'react';
 import Button from '@mui/material/Button';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { Typography } from '@mui/material';
 import { MemberFile } from '../../../lib/types';
+import agent from '../../../lib/api/agent';
 
 interface Props {
   memberFiles?: MemberFile[];
   setMemberFiles: (files: MemberFile[]) => void;
 }
 
-function MemberFileFormSection({memberFiles, setMemberFiles}: Props) {
-    //const [fileNames, setFileNames] = useState<string[]>([]);
+function MemberFileFormSection({ memberFiles, setMemberFiles }: Props) {
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-  interface FileChangeEvent extends React.ChangeEvent<HTMLInputElement> {
-    target: HTMLInputElement & EventTarget;
+const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const files = Array.from(event.target.files || []);
+  setMemberFiles(files.map((file: File) => ({ filePath: file.name } as MemberFile)));
+
+  for (const file of files) {
+    const formData = new FormData();
+    formData.append('file', file); // name must match what the backend expects
+
+    try {
+      await agent.Members.upload(formData); // no need to set headers
+      console.log('File uploaded successfully');
+    } catch (error) {
+      console.error('Upload failed', error);
+    }
   }
+};
 
-  const handleFileChange = (event: FileChangeEvent): void => {
-    const files = Array.from(event.target.files || []);
-    setMemberFiles(files.map((file: File) => ({ filePath: file.name } as MemberFile)));
+  const handleUploadClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-      {/* Visible input field */}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {/* Hidden input */}
       <input
-       hidden
+        hidden
         type="file"
+        ref={fileInputRef}
         onChange={handleFileChange}
         multiple
-        style={{ flexGrow: 1 }}
       />
 
-      {/* Upload button (optional trigger) */}
-      <Button sx={{  mt:2, justifyContent: 'start', width:'%' }} color="primary" size="large"
-        component="span"  
+      {/* Trigger button */}
+      <Button
+        sx={{ mt: 2, alignSelf: 'start' }}
+        color="primary"
+        size="large"
         variant="contained"
         startIcon={<CloudUploadIcon />}
-        onClick={() => {
-          const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
-          if (fileInput) fileInput.click();
-        }}
+        onClick={handleUploadClick}
       >
-       <Typography sx={{ fontSize: '1rem', p:1 }} >
-       
-      Upload files here...
-       
-     </Typography>
+        <Typography sx={{ fontSize: '1rem', p: 1 }}>
+          Upload files here...
+        </Typography>
       </Button>
-      {/* Display the list of uploaded file names */}
+
+      {/* File list */}
       <ul>
         {memberFiles?.map((memFile, index) => (
           <li key={index}>{memFile.filePath}</li>
         ))}
       </ul>
     </div>
- 
   );
-     
 }
+
 export default MemberFileFormSection;

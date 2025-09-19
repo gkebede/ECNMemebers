@@ -1,3 +1,19 @@
+export type Result<T> = {
+  memberFiles: never[];
+  isSuccess: boolean;
+  value?: T;
+  error?: string;
+};
+
+export type MemberFileDto = {
+  id: string;
+  fileName: string;
+  filePath: string;
+  fileDescription?: string;
+  contentType: string;
+}
+
+
 export type Member = {
 id?: string;
     firstName: string
@@ -17,6 +33,14 @@ id?: string;
     memberFiles?: MemberFile[]
     payments?: Payment[]
     incidents?: Incident[]
+  }
+
+  export type File ={
+   
+                FileName?: string,
+                FileDescription?: string,
+                FilePath?: string,
+                ContentType?: string,
   }
 
 // export type Member = {

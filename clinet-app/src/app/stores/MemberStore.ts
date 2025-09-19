@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { Member } from "../../lib/types";
-import agent from "../api/agent";
+import agent from "../../lib/api/agent";
 
  class MemberStore {
     members: Member[] = [];
@@ -20,23 +20,29 @@ import agent from "../api/agent";
  
 
     
-    public loadAllMembers = async () => {
-      try {
-          const members = await agent.Members.list();
-          runInAction(() => {
-              this.members = members;
-              this.loadingInitial = false;
-         
-          members.forEach(member => {
-              if (member.id) {
-                  this.memberRegistry.set(member.id, member);
+            public loadAllMembers = async () => {
+              this.setLoadingInitial(true);
+              try {
+                const response = await agent.Members.list();
+                const members = Array.isArray(response) ? response : response.value ?? [];
+
+                runInAction(() => {
+                  this.members = members;
+                  this.memberRegistry.clear();
+                  members.forEach(member => {
+                    if (member.id) {
+                      this.memberRegistry.set(member.id, member);
+                    }
+                  });
+                  this.setLoadingInitial(false);
+                });
+              } catch (error) {
+                console.error("Error loading members:", error);
+                runInAction(() => this.setLoadingInitial(false));
               }
-          });
-        });
-      } catch (error) {
-          console.log(error);
-      }
-  };
+            };
+
+
 
      
   

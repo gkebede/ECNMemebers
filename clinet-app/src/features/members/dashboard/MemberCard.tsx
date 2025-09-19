@@ -32,9 +32,9 @@ export default function MemberCard({ member }: Props) {
     }, [id, loadMember, member?.id, memberStore, setEditMode]);
     
 
-  const handleView = () => {
-    navigate("/home");
-  };
+  const navigateList =() => navigate('/memberList');
+  
+ 
 
  
 
@@ -144,7 +144,7 @@ export default function MemberCard({ member }: Props) {
           </CardContent>
 
           <CardActions sx={{ justifyContent: 'flex-end', p: 2 }}>
-            <Button onClick={handleView} color="inherit">
+            <Button onClick={navigateList} color="inherit">
               Cancel
             </Button>
             {/* <Button onClick={handleUpdate} variant="contained" color="primary">

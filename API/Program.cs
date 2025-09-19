@@ -5,6 +5,7 @@ using Application.MediatR;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,6 +54,23 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+
+
+
+app.UseStaticFiles(); // To serve wwwroot
+
+// Serve 'uploads' as static files from the project root
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "uploads")),
+    RequestPath = "/uploads"
+});
+
+ 
+
+
+
 
 // Configure the HTTP request pipeline.
 
