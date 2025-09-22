@@ -10,7 +10,8 @@ namespace Domain
 
         //! public string Id { get; set; } = Guid.NewGuid().ToString(); -> set already in IdentityUser no need in creating a "Member" and also ***Make sure Id is not required in the MemberDTO.
         //! ***Make sure Id is not required in the other Dtos (I.E. Payments...) since it is set in each Domain classes  (public string Id { get; set; } = Guid.NewGuid().ToString();) and Ignore() the "Id" in the mapping profile for creating the objec
-
+        public int? ReceiverId { get; set; }
+        
         [Display(Name = "First Name")]
         public required string FirstName { get; set; }
         [Display(Name = "Middle Name")]

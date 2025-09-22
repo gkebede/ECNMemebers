@@ -42,7 +42,7 @@ namespace Persistence
                     {
                         PaymentDate = new DateTime(2021, 1, 1).ToString("yyyy-MM-dd"),
                         PaymentAmount = 50.00,
-                        PaymentType = PaymentType.CreditCard,
+                        PaymentType = PaymentType.CreditCard,  
                         PaymentRecurringType = PaymentRecurringType.Annual,
                         MemberId = member.Id
                     },
@@ -78,7 +78,7 @@ namespace Persistence
                 {
                     new FamilyMember {
                          MemberFamilyFirstName = "Jane",
-                         MemberFamilyLastName = "Doe", 
+                         MemberFamilyLastName = "Doe",
                          MemberFamilyMiddleName="CBE",
                          Relationship ="Mother",
                          MemberId = member.Id },
@@ -88,6 +88,7 @@ namespace Persistence
                          MemberFamilyMiddleName="Tekle",
                           Relationship ="Sister",
                          MemberId = member.Id }
+
                 };
 
                 await context.FamilyMembers.AddRangeAsync(familyMembers);

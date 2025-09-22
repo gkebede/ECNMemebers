@@ -1,6 +1,4 @@
-using Application.Core;
 using AutoMapper;
-using Domain;
 
 namespace Application.Utilities
 {

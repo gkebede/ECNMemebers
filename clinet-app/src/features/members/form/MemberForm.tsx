@@ -22,6 +22,7 @@ import IncidentFormSection from './IncidentFormSection';
 const defaultMember: Member = {
   id: '',
   firstName: '',
+  middleName: '',
   lastName: '',
   email: '',
   registerDate: '',
@@ -50,7 +51,7 @@ function MemberForm() {
   const [files, setFiles] = useState<File[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const isBaseInfoFilled = !!(member.firstName && member.lastName && member.email && member.phoneNumber);
+  const isBaseInfoFilled = !!(member.firstName && member.middleName && member.lastName && member.email && member.phoneNumber);
 
   useEffect(() => {
     if (id) {
@@ -64,9 +65,14 @@ function MemberForm() {
 
   useEffect(() => {
     if (editMode && selectedMember && selectedMember.id === id) {
-      const formattedDate = selectedMember.registerDate
-        ? new Date(selectedMember.registerDate).toISOString().split('T')[0]
-        : '';
+      // const formattedDate = selectedMember.registerDate
+      //   ? new Date(selectedMember.registerDate).toISOString().split('T')[0]
+      //   : '';
+  const formattedDate = (() => {
+  const d = new Date(selectedMember.registerDate || '');
+  return !isNaN(d.getTime()) ? d.toISOString().split('T')[0] : '';
+})();
+
 
       setMember({ ...selectedMember, registerDate: formattedDate });
       setAddresses(selectedMember.addresses ?? []);
@@ -181,9 +187,12 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             {editMode ? 'Edit Member' : 'Register New Member'}
           </Typography>
 
-          <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
+            <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
             <TextField label="First Name" value={member.firstName}
               onChange={(e) => handleInputChange('firstName', e.target.value, e)} />
+
+               <TextField label="Middle Name" value={member.middleName}
+              onChange={(e) => handleInputChange('middleName', e.target.value, e)} />
 
             <TextField label="Last Name" value={member.lastName}
               onChange={(e) => handleInputChange('lastName', e.target.value, e)} />
@@ -194,22 +203,26 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             <TextField label="Phone Number" value={member.phoneNumber}
               onChange={(e) => handleInputChange('phoneNumber', e.target.value, e)} />
 
-            <FormControlLabel control={
-              <Checkbox checked={member.isActive}
-                onChange={(e) => setMember(prev => ({ ...prev, isActive: e.target.checked }))} />
-            } label="Is Active" />
-
-            <FormControlLabel control={
-              <Checkbox checked={member.isAdmin}
-                onChange={(e) => setMember(prev => ({ ...prev, isAdmin: e.target.checked }))} />
-            } label="Is Admin" />
-
-            <TextField label="Register Date" type="date"
+                 <TextField
+              label="Register Date"
+              type="date"
               value={member.registerDate}
               onChange={(e) => setMember(prev => ({ ...prev, registerDate: e.target.value }))}
               InputLabelProps={{ shrink: true }}
             />
-          </Box>
+
+            <FormControlLabel control={
+              <Checkbox checked={member.isActive}
+              onChange={(e) => setMember(prev => ({ ...prev, isActive: e.target.checked }))} />
+            } label="Is Active" />
+
+            <FormControlLabel control={
+              <Checkbox checked={member.isAdmin}
+              onChange={(e) => setMember(prev => ({ ...prev, isAdmin: e.target.checked }))} />
+            } label="Is Admin" />
+
+         
+            </Box>
 
           {isBaseInfoFilled && (
             <>

@@ -17,6 +17,7 @@ export type MemberFileDto = {
 export type Member = {
 id?: string;
     firstName: string
+    middleName: string
     lastName: string
     email: string
     registerDate: string

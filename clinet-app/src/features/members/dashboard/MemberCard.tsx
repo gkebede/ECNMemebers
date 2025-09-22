@@ -16,40 +16,43 @@ type Props = {
 
 export default function MemberCard({ member }: Props) {
   const navigate = useNavigate();
-    const store = useStore();
-      const { memberStore } = store;
-      const { loadMember, setEditMode } = memberStore;
+  const store = useStore();
+  const { memberStore } = store;
+  const { loadMember, setEditMode } = memberStore;
+  const { id } = useParams<{ id: string }>();
 
-    const { id } = useParams<{ id: string }>();
-    
-    useEffect(() => {
-      if (member?.id) {
-        setEditMode(true);
-         loadMember(member?.id); // This action sets selectedMember internally
-      } else {
-        memberStore.setEditMode(false);
-      }
-    }, [id, loadMember, member?.id, memberStore, setEditMode]);
-    
+  useEffect(() => {
+    if (member?.id) {
+      setEditMode(true);
+      loadMember(member.id);
+    } else {
+      setEditMode(false);
+    }
+  }, [member?.id, loadMember, setEditMode]);
 
-  const navigateList =() => navigate('/memberList');
-  
- 
+  const navigateList = () => navigate('/memberList');
 
- 
+  const handleDetailsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    const memberId = event.currentTarget.getAttribute('data-member-id');
+    if (memberId) {
+      navigate(`/edit/${memberId}`);
+    }
+  };
 
-    const handleDetailsClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-      const memberId = event.currentTarget.getAttribute('data-member-id');
-      if (memberId) {
-       
-        navigate(`/edit/${memberId}`);
-      }
-    };
+  const formatSafeDate = (dateString?: string) => {
+    if (!dateString) return 'N/A';
+    const d = new Date(dateString);
+    return !isNaN(d.getTime()) ? format(d, 'dd MMM yyyy') : 'N/A';
+  };
+
+  const formatCurrency = (amount?: number) => {
+    if (amount == null) return 'N/A';
+    return amount.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  };
 
   return (
-    <>
     <Grid2 container justifyContent="center" mt={10}>
-      <Grid2 >
+      <Grid2>
         <Card sx={{ borderRadius: 3, backgroundColor: '#f5f5f5' }}>
           <CardHeader
             title={
@@ -66,12 +69,8 @@ export default function MemberCard({ member }: Props) {
           />
 
           <CardContent>
-            <Typography mb={2} variant="h6">
-              <strong>Email:</strong> {member.email}
-            </Typography>
-            <Typography mb={2} variant="h6">
-              <strong>Phone:</strong> {member.phoneNumber}
-            </Typography>
+            <Typography mb={2} variant="h6"><strong>Email:</strong> {member.email}</Typography>
+            <Typography mb={2} variant="h6"><strong>Phone:</strong> {member.phoneNumber}</Typography>
 
             {member.bio && (
               <Chip
@@ -103,23 +102,17 @@ export default function MemberCard({ member }: Props) {
                   <TableRow>
                     <TableCell>
                       {member.incidents?.length
-                        ? member.incidents.map((inc, idx) => (
-                            <div key={idx}>{inc.eventNumber}</div>
-                          ))
+                        ? member.incidents.map((inc, idx) => <div key={idx}>{inc.eventNumber}</div>)
                         : "N/A"}
                     </TableCell>
                     <TableCell>
                       {member.payments?.length
-                        ? member.payments.map((pmt, idx) => (
-                            <div key={idx}>{pmt.paymentAmount}</div>
-                          ))
+                        ? member.payments.map((pmt, idx) => <div key={idx}>{formatCurrency(pmt.paymentAmount)}</div>)
                         : "N/A"}
                     </TableCell>
                     <TableCell>
                       {member.payments?.length
-                        ? member.payments.map((pmt, idx) => (
-                            <div key={idx}>{format(new Date(pmt.paymentDate), 'dd MMM yyyy')}</div>
-                          ))
+                        ? member.payments.map((pmt, idx) => <div key={idx}>{formatSafeDate(pmt.paymentDate)}</div>)
                         : "N/A"}
                     </TableCell>
                     <TableCell>
@@ -131,7 +124,7 @@ export default function MemberCard({ member }: Props) {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                {file.filePath}
+                                {file.fileName || 'Receipt'}
                               </a>
                             </div>
                           ))
@@ -144,27 +137,14 @@ export default function MemberCard({ member }: Props) {
           </CardContent>
 
           <CardActions sx={{ justifyContent: 'flex-end', p: 2 }}>
-            <Button onClick={navigateList} color="inherit">
-              Cancel
-            </Button>
-            {/* <Button onClick={handleUpdate} variant="contained" color="primary">
+            <Button onClick={navigateList} color="inherit">Cancel</Button>
+            <Button variant="contained" color="primary" onClick={handleDetailsClick} data-member-id={member.id}>
               Update
-            </Button> */}
-
-         
-                    <Button variant="contained" color="primary"
-                      onClick={handleDetailsClick}
-                      data-member-id={member.id}
-                      
-                    >
-                      
-                      Update</Button>
-                
+            </Button>
           </CardActions>
         </Card>
       </Grid2>
       <SideDrawer />
     </Grid2>
-    </>
   );
 }

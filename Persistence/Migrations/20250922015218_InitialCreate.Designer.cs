@@ -12,7 +12,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250520173233_InitialCreate")]
+    [Migration("20250922015218_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -178,6 +178,9 @@ namespace Persistence.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ReceiverId")
+                        .HasColumnType("int");
+
                     b.Property<string>("RegisterDate")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -210,6 +213,9 @@ namespace Persistence.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("ContentType")
                         .HasColumnType("nvarchar(max)");
